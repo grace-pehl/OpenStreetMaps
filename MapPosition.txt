@@ -4,7 +4,8 @@ Grace Pehl, Ph.D.
 The Treasure Coast region of Florida includes Indian River, St. Lucie, and Martin counties.  The region is named for the Spanish treasure fleet that sank offshore during a hurricane three hundred years ago this month (July 30, 1715).  Precious coins and artifacts are still regularly found on the areas beaches.  I had hoped to use my town of Vero Beach in Indian River County for this project, but it took the entire region to reach the required 50 MB of data.
 
 Open Street Map link to the region:
-http://www.openstreetmap.org/export#map=9/27.5007/-80.4000
+http://www.openstreetmap.org/export#map=9/27.5022/-80.5009
+ (lat. 27 to 28, long. -81 to -80)
 
 Wikipedia article on the 1715 fleet:
 https://en.wikipedia.org/wiki/1715_Treasure_Fleet
