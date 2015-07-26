@@ -1,0 +1,11 @@
+# References used in project
+
+I relied heavily on the sample project and the lesson six code.
+
+The following websites were also useful:
+
+Getting MongoDB working on my computer:
+http://altons.github.io/python/2013/01/21/gentle-introduction-to-mongodb-using-pymongo/
+
+Getting MongoDB queries to work from python:
+http://stackoverflow.com/questions/30333020/mongodb-pymongo-aggregate-gives-strange-output-something-about-cursor
