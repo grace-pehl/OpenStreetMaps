@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Openstreetmaps by grace-pehl</title>
+    <title>Grace Pehl, PhD by grace-pehl</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,67 +11,198 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Openstreetmaps</h1>
-      <h2 class="project-tagline">Wrangling OSM data into MongoDB</h2>
+      <h1 class="project-name">Grace Pehl, PhD</h1>
+      <h2 class="project-tagline">Wrangling OpenStreetMaps data into MongoDB</h2>
       <a href="https://github.com/grace-pehl/OpenStreetMaps" class="btn">View on GitHub</a>
       <a href="https://github.com/grace-pehl/OpenStreetMaps/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/grace-pehl/OpenStreetMaps/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="openstreetmaps-data-wrangling-with-mongodb" class="anchor" href="#openstreetmaps-data-wrangling-with-mongodb" aria-hidden="true"><span class="octicon octicon-link"></span></a>OpenStreetMaps Data Wrangling with MongoDB</h1>
+      <p>I downloaded the <a href="http://www.openstreetmap.org/">OpenStreetMaps</a> data for my area, cleaned some aspects of the data in python and converted the XML data into JSON format.  I inserted the JSON data into a MongoDB database and did some exploration of the user-entered information.</p>
 
-<p>Grace Pehl, PhD</p>
+<h1>
+<a id="map-area-floridas-treasure-coast-region-lat-27-to-28-long--81-to--80" class="anchor" href="#map-area-floridas-treasure-coast-region-lat-27-to-28-long--81-to--80" aria-hidden="true"><span class="octicon octicon-link"></span></a>Map Area: Florida's Treasure Coast region (lat. 27 to 28, long. -81 to -80)</h1>
 
-<p>Udacity Data Analyst Nanodegree Project</p>
+<p><a href="http://www.openstreetmap.org/export#map=9/27.5022/-80.5009">http://www.openstreetmap.org/export#map=9/27.5022/-80.5009</a></p>
 
 <h2>
-<a id="purpose-of-the-project" class="anchor" href="#purpose-of-the-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Purpose of the Project</h2>
+<a id="problems-encountered-in-the-map" class="anchor" href="#problems-encountered-in-the-map" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problems Encountered in the Map</h2>
 
 <ol>
-<li>download XML data from Open Street Maps
-
-<ul>
-<li>MapPostion.txt - a description of the area selected</li>
-<li>TreasureCoastFL.osm - a sample of the 82.6 MB dataset</li>
-<li>1_OSM_samplingData.py - code used to create data sample (provided by course)</li>
-</ul>
+<li>Over-abbreviated street types were expanded using a mapping.
+<code>python
+mapping = { "St": "Street", "St.": "Street", "Ave": "Avenue", "ave": "Avenue",
+"Rd.": "Road", "Pl": "Place", "Ct": "Court", "Dr.": "Drive",
+"Dr": "Drive", "Blvd": "Boulevard", "BLVD": "Boulevard",
+"SE": "Southeast"}
+</code>
 </li>
-<li>audit the data and perform some cleaning 
-
-<ul>
-<li>OSHaudit_values.py - explore the dataset</li>
-<li>OSHkey_types.py - output a list of all keys used</li>
-<li>keys.txt - all keys found in the OSM data</li>
-</ul>
+<li>State appeared as both “FL” and “Florida.” Since the US postal system uses state
+abbreviations, “FL” was used as standard.
+<code>python
+if key == "addr:state" &amp; value == "Florida":
+value = "FL"
+</code>
 </li>
-<li>reformat the data to JSON
-
-<ul>
-<li>Data.py - convert data formats with sax parsing and perform some data cleaning</li>
-</ul>
+<li>The city of Hobe Sound was listed as Hobe Sound, FL in the city field.
+<code>python
+if key == "addr:city" &amp; value == "Hobe Sound, FL":
+value = "Hobe Sound"
+</code>
 </li>
-<li>insert the data into MongoDB</li>
-<li>run some queries on the database
-
-<ul>
-<li>mongoDBqueries - code to run queries (not all queries saved in the code)</li>
-</ul>
-</li>
-<li>create a brief project writeup.
-
-<ul>
-<li>ProjectNotes.pdf</li>
-<li>Resources.txt</li>
-</ul>
-</li>
+<li>Despite the region's many faiths, only three religions are present in data: christian, jewish, and
+unitarian_universalist. This indicates that the map needs additional user input.
+## Overview of the Data
+### Statistics of the OSM file:
+#### OSM file size: 82,586 kB
+#### JSON file size: 89,959 kB
+#### Tags:</li>
 </ol>
 
-<p>All programming quizes from Lesson 6 of the Udacity Data Wrangling course (quiz # 1 and 3-6) are also included. </p>
+<pre><code>'member' 24700
+'meta' 1
+'nd' 446341
+'node' 373451
+'note' 1
+'osm' 1
+'relation' 373,
+'tag' 229216
+'way' 33166
+</code></pre>
+
+<h4>
+<a id="unique-users-273" class="anchor" href="#unique-users-273" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unique users: 273</h4>
+
+<h4>
+<a id="type-of-keys-621-unique-keys-used" class="anchor" href="#type-of-keys-621-unique-keys-used" aria-hidden="true"><span class="octicon octicon-link"></span></a>Type of keys: 621 unique keys used</h4>
+
+<p>'lower': 85955, 'lower_colon': 133910, 'other': 9351, 'problemchars': 0</p>
+
+<h3>
+<a id="mongodb-queries" class="anchor" href="#mongodb-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>MongoDB Queries</h3>
+
+<p>Sample document: </p>
+
+<pre><code>db.osm.find_one()
+_id': ObjectId('55b32875d44d5c1768b3d426'),
+u'created': {u'changeset': u'14920451',
+u'timestamp': u'2013-02-05T10:53:40Z',
+u'uid': u'207745',
+u'user': u'NE2',
+u'version': u'3'},
+u'id': u'26786875',
+u'pos': [27.6932111, -80.8890663],
+u'type': u'node'}
+</code></pre>
+
+<ul>
+<li>Total number of documents: 406,617 <code>db.osm.find().count()</code>
+</li>
+<li>Number of nodes: 373,450 <code>db.osm.find({"type":"node"}).count()</code>
+</li>
+<li>Number of ways: 33,166 <code>db.osm.find({"type":"way"}).count()</code>
+</li>
+<li>Number of unique users (by user id): 261</li>
+</ul>
+
+<pre><code>pipeline = “[{"$group":{"_id":"$created.uid", "count":{"$sum":1}}}]”
+db.osm.aggregate(pipeline)
+</code></pre>
+
+<p>Top 5 contributing users (by user name):</p>
+
+<ul>
+<li>user contributions</li>
+<li>“grouper” 157,846</li>
+<li>“woodpeck_fixbot 53,623</li>
+<li>“NE2” 52,685</li>
+<li>“Latze” 14,854</li>
+<li>“Chris Lawrence” 12,198</li>
+</ul>
+
+<pre><code>pipeline = “[{"$group" :{ "_id" : "$created.user",
+"count" : {"$sum" : 1 }}},
+{ "$sort" : { "count" : -1 }},
+{ "$limit" : 5}]”
+db.osm.aggregate(pipeline)
+</code></pre>
+
+<p>Number of users contributing 1 entry (by user name): 46</p>
+
+<pre><code>pipeline = “[{"$group":{"_id":"$created.uid", "count":{"$sum":1}}},
+{"$group":{"_id":"$count", "num_users":{"$sum":1}}},
+{"$sort":{"_id":1}},
+{"$limit":1}]”
+db.osm.aggregate(pipeline)```
+Number of amenities: 1065 ```db.osm.find({"amenity":{"$exists": 1}}).count()```
+## Other Ideas about the Dataset
+### Key prefixes
+In the dataset, 621 different keys were used to describe the data. Listing them showed many keys
+carrieds a prefix, often “tiger:” or “gnis:” A search revealed that tiger is an acronym used for a spatial
+extract from the US Census Bureau and gnis stands for geographic names information system used by
+the US Geological Survey. A further cleaning step could be to remove these prefixes from the key and
+create another key = “source” with value = “tiger” or “gnis”.
+### “Name:” keys
+There are also hundreds of keys that seem useless, called “name:” followed by 2-3 random letters such
+as “bcl”, “rw”, “kv”, “diq”, or “tpi”. These keys could be investigated and possibly removed from the
+dataset.
+## Improvements to OSM
+Data analysis using Open Street Maps is complicated by the non-standardized formats. It would be
+helpful if users had more guidance as they entered data. Drop-down boxes would be useful for the
+most commonly entered data like address and amenity, but would become to cumbersome if used for
+all types of user-entered data. Perhaps the 10 most common keys could be in a drop-down box, with a
+write-in “other” choice available. A few short style guidelines (“Avoid abbreviations except for
+countries and states.”) or samples of good input would guide users to entering cleaner data, without
+giving up the flexibility of the OSM project.
+## Additional data exploration using MongoDB queries
+Number of amenities: 1065 
+```r
+db.osm.find({"amenity":{"$exists": 1}}).count()
+Types of amenities: pipeline = “[{"$group": {"_id": "$amenity", "count":{"$sum":1}}},
+{"$sort" : {"count" : -1}}]”
+db.osm.aggregate(pipeline)
+{u'count': 321, u'_id': u'place_of_worship'}
+{u'count': 159, u'_id': u'parking'}
+{u'count': 148, u'_id': u'school'}
+{u'count': 67, u'_id': u'restaurant'}
+{u'count': 62, u'_id': u'fuel'}
+{u'count': 58, u'_id': u'fire_station'}
+{u'count': 50, u'_id': u'fast_food'}
+{u'count': 24, u'_id': u'bank'}
+{u'count': 20, u'_id': u'library'}
+{u'count': 19, u'_id': u'pharmacy'}
+{u'count': 17, u'_id': u'police'}
+{u'count': 16, u'_id': u'post_office'}
+{u'count': 14, u'_id': u'hospital'}
+{u'count': 12, u'_id': u'toilets'}
+{u'count': 12, u'_id': u'fountain'}
+{u'count': 10, u'_id': u'grave_yard'}
+{u'count': 8, u'_id': u'cafe'}
+{u'count': 7, u'_id': u'swimming_pool'}
+{u'count': 6, u'_id': u'atm'}
+{u'count': 4, u'_id': u'community_centre'}
+{u'count': 4, u'_id': u'theatre'}
+{u'count': 3, u'_id': u'car_wash'}
+{u'count': 3, u'_id': u'prison'}
+{u'count': 3, u'_id': u'public_building'}
+{u'count': 2, u'_id': u'auto:service'}
+{u'count': 2, u'_id': u'parking_aisle'}
+{u'count': 2, u'_id': u'dentist'}
+{u'count': 2, u'_id': u'shelter'}
+{u'count': 2, u'_id': u'bar'}
+{u'count': 1, u'_id': u'college'}
+{u'count': 1, u'_id': u'boat_storage'}
+{u'count': 1, u'_id': u'university'}
+{u'count': 1, u'_id': u'department_store'}
+{u'count': 1, u'_id': u'animal_shelter'}
+{u'count': 1, u'_id': u'doctors'}
+{u'count': 1, u'_id': u'townhall'}
+{u'count': 1, u'_id': u'social_centre"}
+</code></pre>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/grace-pehl/OpenStreetMaps">Openstreetmaps</a> is maintained by <a href="https://github.com/grace-pehl">grace-pehl</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/grace-pehl/OpenStreetMaps">Grace Pehl, PhD</a> is maintained by <a href="https://github.com/grace-pehl">grace-pehl</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
