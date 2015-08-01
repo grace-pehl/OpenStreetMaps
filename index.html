@@ -13,9 +13,12 @@
     <section class="page-header">
       <h1 class="project-name">Grace Pehl, PhD</h1>
       <h2 class="project-tagline">Wrangling OpenStreetMaps data into MongoDB</h2>
-      <a href="https://github.com/grace-pehl/OpenStreetMaps" class="btn">View on GitHub</a>
+	  <a href="http://grace-pehl.github.io/" class="btn">Return to Main Page</a>
+      <a href="https://github.com/grace-pehl/OpenStreetMaps" class="btn">View Code on GitHub</a>
       <a href="https://github.com/grace-pehl/OpenStreetMaps/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/grace-pehl/OpenStreetMaps/tarball/master" class="btn">Download .tar.gz</a>
+	  <p><a href="https://www.linkedin.com/in/gracepehl"><img src="https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x33.png" alt="View Grace Pehl's profile on LinkedIn"></a></p>
+
     </section>
 
     <section class="main-content">
@@ -31,34 +34,36 @@
 
 <ol>
 <li>Over-abbreviated street types were expanded using a mapping.
-<code>python
+<pre>
 mapping = { "St": "Street", "St.": "Street", "Ave": "Avenue", "ave": "Avenue",
 "Rd.": "Road", "Pl": "Place", "Ct": "Court", "Dr.": "Drive",
 "Dr": "Drive", "Blvd": "Boulevard", "BLVD": "Boulevard",
 "SE": "Southeast"}
-</code>
+</pre>
 </li>
 <li>State appeared as both “FL” and “Florida.” Since the US postal system uses state
 abbreviations, “FL” was used as standard.
-<code>python
+<pre>
 if key == "addr:state" &amp; value == "Florida":
 value = "FL"
-</code>
+</pre>
 </li>
 <li>The city of Hobe Sound was listed as Hobe Sound, FL in the city field.
-<code>python
+<pre>
 if key == "addr:city" &amp; value == "Hobe Sound, FL":
 value = "Hobe Sound"
-</code>
+</pre>
 </li>
 <li>Despite the region's many faiths, only three religions are present in data: christian, jewish, and
 unitarian_universalist. This indicates that the map needs additional user input.
-## Overview of the Data
-### Statistics of the OSM file:
-#### OSM file size: 82,586 kB
-#### JSON file size: 89,959 kB
-#### Tags:</li>
+</li>
 </ol>
+<h2><a id="problems-encountered-in-the-map" class="anchor" href="#Overview-of-the-Data" aria-hidden="true"><span class="octicon octicon-link"></span></a> Overview of the Data</h2>
+<h3 class="anchor"> Statistics of the OSM file:</h3>
+<h4 class="anchor"> OSM file size: 82,586 kB</h4>
+<h4 class="anchor"> JSON file size: 89,959 kB</h4>
+<h4 class="anchor"> Tags:</h4>
+
 
 <pre><code>'member' 24700
 'meta' 1
@@ -112,14 +117,14 @@ db.osm.aggregate(pipeline)
 
 <p>Top 5 contributing users (by user name):</p>
 
-<ul>
-<li>user contributions</li>
-<li>“grouper” 157,846</li>
-<li>“woodpeck_fixbot 53,623</li>
-<li>“NE2” 52,685</li>
-<li>“Latze” 14,854</li>
-<li>“Chris Lawrence” 12,198</li>
-</ul>
+<table>
+<tr><td>user</td><td>contributions</td></tr>
+<tr><td>“grouper”</td><td>157,846</td></tr>
+<tr><td>“woodpeck_fixbot"</td><td>53,623</td></tr>
+<tr><td>“NE2”</td><td>52,685</td></tr>
+<tr><td>“Latze”</td><td>14,854</td></tr>
+<tr><td>“Chris Lawrence”</td><td>12,198</td></tr>
+</table>
 
 <pre><code>pipeline = “[{"$group" :{ "_id" : "$created.user",
 "count" : {"$sum" : 1 }}},
@@ -134,32 +139,32 @@ db.osm.aggregate(pipeline)
 {"$group":{"_id":"$count", "num_users":{"$sum":1}}},
 {"$sort":{"_id":1}},
 {"$limit":1}]”
-db.osm.aggregate(pipeline)```
-Number of amenities: 1065 ```db.osm.find({"amenity":{"$exists": 1}}).count()```
-## Other Ideas about the Dataset
-### Key prefixes
-In the dataset, 621 different keys were used to describe the data. Listing them showed many keys
-carrieds a prefix, often “tiger:” or “gnis:” A search revealed that tiger is an acronym used for a spatial
+db.osm.aggregate(pipeline)
+</code></pre>
+<h4> Number of amenities: 1065</h4> <code>db.osm.find({"amenity":{"$exists": 1}}).count()</code>
+<h2> Other Ideas about the Dataset</h2>
+<h3> Key prefixes</h3>
+<p>In the dataset, 621 different keys were used to describe the data. Listing them showed many keys
+carried a prefix, often “tiger:” or “gnis:” A search revealed that tiger is an acronym used for a spatial
 extract from the US Census Bureau and gnis stands for geographic names information system used by
 the US Geological Survey. A further cleaning step could be to remove these prefixes from the key and
-create another key = “source” with value = “tiger” or “gnis”.
-### “Name:” keys
-There are also hundreds of keys that seem useless, called “name:” followed by 2-3 random letters such
+create another key = “source” with value = “tiger” or “gnis”.</p>
+<h3> “Name:” keys </h3>
+<p>There are also hundreds of keys that seem useless, called “name:” followed by 2-3 random letters such
 as “bcl”, “rw”, “kv”, “diq”, or “tpi”. These keys could be investigated and possibly removed from the
-dataset.
-## Improvements to OSM
-Data analysis using Open Street Maps is complicated by the non-standardized formats. It would be
+dataset.</p>
+<h2> Improvements to OSM </h2>
+<p>Data analysis using Open Street Maps is complicated by the non-standardized formats. It would be
 helpful if users had more guidance as they entered data. Drop-down boxes would be useful for the
 most commonly entered data like address and amenity, but would become to cumbersome if used for
 all types of user-entered data. Perhaps the 10 most common keys could be in a drop-down box, with a
 write-in “other” choice available. A few short style guidelines (“Avoid abbreviations except for
 countries and states.”) or samples of good input would guide users to entering cleaner data, without
-giving up the flexibility of the OSM project.
-## Additional data exploration using MongoDB queries
-Number of amenities: 1065 
-```r
-db.osm.find({"amenity":{"$exists": 1}}).count()
-Types of amenities: pipeline = “[{"$group": {"_id": "$amenity", "count":{"$sum":1}}},
+giving up the flexibility of the OSM project.</p>
+<h2> Additional data exploration using MongoDB queries </h2>
+Number of amenities: 1065 <code>db.osm.find({"amenity":{"$exists": 1}}).count()</code>
+<h4>Types of amenities:</h4> 
+<pre><code>pipeline = “[{"$group": {"_id": "$amenity", "count":{"$sum":1}}},
 {"$sort" : {"count" : -1}}]”
 db.osm.aggregate(pipeline)
 {u'count': 321, u'_id': u'place_of_worship'}
